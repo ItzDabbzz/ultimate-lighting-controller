@@ -2,9 +2,8 @@ name: Build and Release
 
 on:
   push:
-    paths:
-      - 'ulc/src/**'
-  pull_request:
+    branches:
+      - main
     paths:
       - 'ulc/src/**'
   workflow_dispatch:
@@ -36,8 +35,20 @@ jobs:
         run: |
           zip -r ulc-release.zip ulc
 
-      - name: Upload release zip as artifact
-        uses: actions/upload-artifact@v4
+      - name: Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
         with:
-          name: ulc-release
-          path: ulc-release.zip
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          body: |
+            Automated release for commit ${{ github.sha }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload release asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ulc-release.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
