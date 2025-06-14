@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: Build and Release
 
 on:
   push:
@@ -32,13 +32,12 @@ jobs:
           cd ulc/src
           npm run build
 
-      - name: Commit and push build output
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Zip ulc folder for release
         run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          cd ulc
-          git add html/
-          git commit -m "Deploy build output" || echo "No changes to commit"
-          git push origin main
+          zip -r ulc-release.zip ulc
+
+      - name: Upload release zip as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ulc-release
+          path: ulc-release.zip
