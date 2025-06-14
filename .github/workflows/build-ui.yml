@@ -37,7 +37,7 @@ jobs:
           zip -r ulc-release.zip ulc
 
       - name: Upload release zip as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ulc-release
           path: ulc-release.zip
