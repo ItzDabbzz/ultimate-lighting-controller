@@ -31,9 +31,9 @@ jobs:
           cd ulc/src
           npm run build
 
-      - name: Zip ulc folder for release
+      - name: Zip ulc folder for release (exclude node_modules)
         run: |
-          zip -r ulc-release.zip ulc
+          zip -r ulc-release.zip ulc -x "ulc/src/node_modules/*"
 
       - name: Create GitHub Release
         id: create_release
