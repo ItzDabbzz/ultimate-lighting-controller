@@ -2,10 +2,8 @@ name: Build and Release
 
 on:
   push:
-    branches:
-      - main
-    paths:
-      - 'ulc/src/**'
+    tags:
+      - 'v*'
   workflow_dispatch:
 
 jobs:
@@ -36,19 +34,12 @@ jobs:
           zip -r ulc-release.zip ulc -x "ulc/src/node_modules/*"
 
       - name: Create GitHub Release
-        id: create_release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
           body: |
             Automated release for commit ${{ github.sha }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload release asset
-        uses: softprops/action-gh-release@v2
-        with:
           files: ulc-release.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
